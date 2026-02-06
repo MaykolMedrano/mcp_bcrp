@@ -45,9 +45,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/MaykolMedrano/mcp-bcrp"
-Repository = "https://github.com/MaykolMedrano/mcp-bcrp"
-Issues = "https://github.com/MaykolMedrano/mcp-bcrp/issues"
+Homepage = "https://github.com/MaykolMedrano/mcp_bcrp"
+Repository = "https://github.com/MaykolMedrano/mcp_bcrp"
+Issues = "https://github.com/MaykolMedrano/mcp_bcrp/issues"
 
 [project.scripts]
 mcp-bcrp = "mcp_bcrp.server:mcp.run"

@@ -1,16 +1,14 @@
 # mcp-bcrp
 
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![MCP Compatible](https://img.shields.io/badge/MCP-Compatible-purple?logo=Claude&logoColor=white)](https://modelcontextprotocol.io/)
-[![BCRP API](https://img.shields.io/badge/API-BCRP-red)](https://estadisticas.bcrp.gob.pe/)
-[![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/MaykolMedrano/mcp_bcrp)
+[![PyPI](https://img.shields.io/pypi/v/mcp-bcrp.svg)](https://pypi.org/project/mcp-bcrp/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
----
+[![User Guide](https://img.shields.io/badge/Guide-User_Guide_(Spanish)-green?style=for-the-badge&logo=jupyter)](https://github.com/MaykolMedrano/mcp_bcrp/blob/main/examples/Guia_Usuario_BCRP.ipynb)
+[![Colab](https://img.shields.io/badge/Open_in_Colab-blue?style=for-the-badge&logo=googlecolab)](https://colab.research.google.com/github/MaykolMedrano/mcp_bcrp/blob/main/examples/Guia_Usuario_BCRP.ipynb)
 
-**MCP Server for Banco Central de Reserva del Peru (BCRP) Statistical API**
-
-A Model Context Protocol (MCP) server providing programmatic access to Peru's official macroeconomic statistics. This library enables AI assistants and Python applications to query over 5,000 economic indicators directly from the Central Reserve Bank of Peru.
+MCP Server and Python library for the **Banco Central de Reserva del Perú (BCRP)** Statistical API. Access over 5,000 macroeconomic indicators directly from your AI agent or Python environment.
 
 ---
 

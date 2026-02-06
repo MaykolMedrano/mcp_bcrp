@@ -85,8 +85,8 @@ pip install -e .
 ### With Optional Dependencies
 
 ```bash
-pip install mcp-bcrp[charts]  # Include matplotlib for chart generation
-pip install mcp-bcrp[dev]     # Include development dependencies
+pip install "mcp-bcrp[charts]"  # Include matplotlib for chart generation
+pip install "mcp-bcrp[dev]"     # Include development dependencies
 ```
 
 ---

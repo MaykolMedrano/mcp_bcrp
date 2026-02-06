@@ -3,13 +3,11 @@ from mcp_bcrp.client import AsyncBCRPClient, BCRPMetadata
 import pandas as pd
 import json
 import logging
-import asyncio
 import matplotlib
 matplotlib.use('Agg')  # Non-interactive backend for server
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import tempfile
-import base64
 import os
 
 # Setup Logging
@@ -230,7 +228,7 @@ async def plot_chart(
                     for es, en in spanish_months.items():
                         date_str = date_str.replace(es, en)
                     return pd.to_datetime(date_str, format='%b.%Y')
-                except:
+                except Exception:
                     return pd.to_datetime(date_str)
             
             df['time'] = df['time'].apply(parse_spanish_date)

@@ -1,11 +1,10 @@
 import io
 import os
-import re
 from pathlib import Path
 import httpx
 import pandas as pd
 import logging
-from typing import Optional, List, Dict, Any
+from typing import List, Dict, Any
 import asyncio
 
 logger = logging.getLogger("mcp_bcrp")
@@ -144,7 +143,8 @@ class BCRPMetadata:
         keywords = query.lower().split()
         search_cols = ["Nombre de serie", "Código de serie"]
         valid_cols = [c for c in search_cols if c in self.df.columns]
-        if not valid_cols: return pd.DataFrame()
+        if not valid_cols:
+            return pd.DataFrame()
         
         mask = pd.Series(True, index=self.df.index)
         for kw in keywords:

@@ -154,6 +154,27 @@ class BCRPMetadata:
             mask &= kw_mask
         return self.df[mask].head(limit)
 
+    def get_series_names(self, codes: List[str]) -> List[str]:
+        """
+        Retrieve original names for a list of series codes.
+        
+        Args:
+            codes: List of BCRP series codes.
+            
+        Returns:
+            List of names corresponding to the codes. 
+            Uses the code itself if name is not found.
+        """
+        if self.df.empty:
+            return codes
+            
+        # Standardize columns to search
+        code_col = "Código de serie" if "Código de serie" in self.df.columns else "Codigo de serie"
+        name_col = "Nombre de serie"
+        
+        mapping = dict(zip(self.df[code_col], self.df[name_col]))
+        return [mapping.get(code, code) for code in codes]
+
 class AsyncBCRPClient:
     """
     Async client for BCRP (Banco Central de Reserva del Perú) Statistical API.

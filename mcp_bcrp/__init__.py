@@ -8,7 +8,7 @@ Use as library:
     from mcp_bcrp.client import AsyncBCRPClient, BCRPMetadata
 """
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 __author__ = "Maykol Medrano"
 
 from mcp_bcrp.client import AsyncBCRPClient, BCRPMetadata

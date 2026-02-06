@@ -153,29 +153,17 @@ async def get_table(
         if df.empty:
             return "No data found."
             
-        # 2. Process Data (Calculate Variation)
-        # Assuming Data has 'time' and series columns
-        # We need to emulate 'variation=1' (Monthly % change usually or Year-over-Year?)
-        # BCRP 'variation=1' usually means % change from previous period? 
-        # Or is it Index? usebcrp 'variation=1' implies monthly variation.
-        
-        # Ensure time is datetime
-        # BCRP returns 'Mmm.YY' or similar sometimes. helper parsing might be needed.
-        # But for now, let's just return the raw data properly formatted, 
-        # Maybe adding a simple pct_change if it's numeric.
-        
-        # For simplicity and reliability in this refactor, we will return the raw values 
-        # but structured neatly. Re-implementing full 'table' logic from usebcrp might be overkill
-        # if the user just wants the data.
-        
-        # However, to be helpful, let's try to set names if provided
-        if names:
-            # Map codes to names
-            # columns are 'time' + codes.
-            mapping = {code: name for code, name in zip(series_codes, names)}
-            df.rename(columns=mapping, inplace=True)
+        # 2. Resolve Names if not provided
+        if not names:
+            await metadata_client.load()
+            names = metadata_client.get_series_names(series_codes)
             
-        return df.to_json(orient='records', date_format='iso')
+        # 3. Rename columns
+        mapping = {code: name for code, name in zip(series_codes, names)}
+        df.rename(columns=mapping, inplace=True)
+            
+        return df.to_json(orient='records', date_format='iso', indent=2)
+        
 
     except Exception as e:
         return f"Table generation failed: {str(e)}"
@@ -234,12 +222,18 @@ async def plot_chart(
             df['time'] = df['time'].apply(parse_spanish_date)
             df = df.set_index('time')
         
-        # 4. Plot each series
+        # 4. Resolve Names if not provided
+        if not names:
+            await metadata_client.load()
+            names = metadata_client.get_series_names(series_codes)
+
+        # 5. Plot each series
         colors = ['#1a5fb4', '#e01b24', '#33d17a', '#ff7800', '#9141ac']
         for idx, code in enumerate(series_codes):
-            if code in df.columns:
-                series = df[code].dropna()
-                label = names[idx] if names and idx < len(names) else code
+            col_name = code if code in df.columns else (names[idx] if names and names[idx] in df.columns else None)
+            if col_name:
+                series = df[col_name].dropna()
+                label = names[idx] if names and idx < len(names) else col_name
                 color = colors[idx % len(colors)]
                 ax.plot(series.index, series.values, linewidth=2.5, 
                        label=label, color=color)

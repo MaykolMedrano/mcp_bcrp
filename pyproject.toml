@@ -7,7 +7,7 @@ name = "mcp-bcrp"
 dynamic = ["version"]
 description = "MCP Server for Banco Central de Reserva del Perú (BCRP) Statistical API"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
     {name = "Maykol Medrano", email = "mmedrano2@uc.cl"}

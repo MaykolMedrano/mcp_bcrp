@@ -1,30 +1,19 @@
+import logging
+from typing import List, Dict, Any
+import asyncio
 import io
 import os
 from pathlib import Path
 import httpx
-import pandas as pd
-import logging
-from typing import List, Dict, Any
-import asyncio
 
 logger = logging.getLogger("mcp_bcrp")
 
 class BCRPMetadata:
-    """
-    Handles fetching and searching BCRP metadata.
-    
-    The metadata file (~17MB) is cached locally for fast searches.
-    On first use, it downloads from BCRP and caches for future use.
-    
-    Cache location priority:
-    1. BCRP_CACHE_DIR environment variable
-    2. User's cache directory (~/.cache/mcp_bcrp or AppData/Local/mcp_bcrp)
-    3. Package directory (fallback)
-    """
     METADATA_URL = "https://estadisticas.bcrp.gob.pe/estadisticas/series/metadata"
     CACHE_FILENAME = "bcrp_metadata.json"
 
     def __init__(self):
+        import pandas as pd
         self.df = pd.DataFrame()
         self._loaded = False
         self._cache_path = self._get_cache_path()
@@ -60,6 +49,7 @@ class BCRPMetadata:
         if self._cache_path.exists():
             logger.info(f"Loading metadata from cache: {self._cache_path}")
             try:
+                import pandas as pd
                 self.df = pd.read_json(self._cache_path, orient="records")
                 self._loaded = True
                 return
@@ -84,6 +74,7 @@ class BCRPMetadata:
             resp.raise_for_status()
             
             content = resp.content
+            import pandas as pd
             self.df = pd.read_csv(io.BytesIO(content), delimiter=";", encoding="latin-1")
             
             # Save to cache
@@ -91,7 +82,7 @@ class BCRPMetadata:
             self._loaded = True
             logger.info(f"Metadata cached: {len(self.df)} series at {self._cache_path}")
 
-    def search(self, query: str, limit: int = 20) -> pd.DataFrame:
+    def search(self, query: str, limit: int = 20) -> "pd.DataFrame":
         """
         Fuzzy search using RapidFuzz (Token Sort Ratio).
         Returns DataFrame of matching series.
@@ -137,8 +128,9 @@ class BCRPMetadata:
         engine = SearchEngine(self.df)
         return engine.solve(query)
 
-    def _simple_search(self, query: str, limit: int = 20) -> pd.DataFrame:
+    def _simple_search(self, query: str, limit: int = 20) -> "pd.DataFrame":
         """Fallback simple search"""
+        import pandas as pd
         # ... (Previous implementation moved here if needed, or just keep minimal)
         keywords = query.lower().split()
         search_cols = ["Nombre de serie", "Código de serie"]
@@ -254,7 +246,7 @@ class AsyncBCRPClient:
         codes: List[str], 
         start_date: str = None, 
         end_date: str = None
-    ) -> pd.DataFrame:
+    ) -> "pd.DataFrame":
         """
         Fetch statistical series data from BCRP API.
         
@@ -328,6 +320,7 @@ class AsyncBCRPClient:
                     row[col_name] = None
             records.append(row)
 
+        import pandas as pd
         df = pd.DataFrame(records)
         return df
 

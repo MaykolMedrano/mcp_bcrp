@@ -171,11 +171,21 @@ asyncio.run(main())
 | `get_table` | `series_codes: list[str]`, `names: list[str]`, `period: str` | Get formatted table with optional custom column names. |
 | `plot_chart` | `series_codes: list[str]`, `period: str`, `title: str`, `names: list[str]`, `output_path: str` | Generate professional PNG chart with automatic date parsing. |
 
+### Available Resources
+
+| Resource | URI | Description |
+|----------|-----|-------------|
+| Metadata | `bcrp://metadata` | Summary of cached metadata and stats. |
+| Key Indicators | `bcrp://indicators/key` | List of most common economic indicators. |
+| Help | `bcrp://help` | Usage guide and tips. |
+
 ### Available Prompts
 
 | Prompt | Description |
 |--------|-------------|
-| `economista_peruano` | System prompt to analyze data as a BCRP Senior Economist with rigorous methodology |
+| `economista_peruano` | System prompt to analyze data as a BCRP Senior Economist with rigorous methodology. |
+| `analista_financiero` | Expert persona for short-term financial market analysis (Forex, Rates). |
+| `explorador_datos` | Assistant to help find the correct series codes for a given topic. |
 
 ---
 

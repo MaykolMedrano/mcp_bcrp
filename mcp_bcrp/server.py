@@ -1,12 +1,7 @@
 from fastmcp import FastMCP
 from mcp_bcrp.client import AsyncBCRPClient, BCRPMetadata
-import pandas as pd
 import json
 import logging
-import matplotlib
-matplotlib.use('Agg')  # Non-interactive backend for server
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 import tempfile
 import os
 
@@ -149,6 +144,7 @@ async def get_table(
         if data_json.startswith("Error") or data_json.startswith("No data"):
             return data_json
             
+        import pandas as pd
         df = pd.read_json(data_json, orient='records')
         if df.empty:
             return "No data found."
@@ -193,11 +189,17 @@ async def plot_chart(
         if data_json.startswith("Error") or data_json.startswith("No data"):
             return data_json
             
+        import pandas as pd
         df = pd.read_json(data_json, orient='records')
         if df.empty:
             return "No data found to plot."
         
         # 2. Setup plot style
+        import matplotlib
+        matplotlib.use('Agg')
+        import matplotlib.pyplot as plt
+        import matplotlib.dates as mdates
+        
         plt.style.use('seaborn-v0_8-whitegrid')
         fig, ax = plt.subplots(figsize=(12, 6), dpi=120)
         
@@ -318,3 +320,92 @@ def economista_peruano(topic: str = "economía peruana"):
 
     Si te faltan datos, usa las herramientas disponibles para buscarlos antes de responder.
     """
+
+@mcp.prompt()
+def analista_financiero(topic: str = "tipo de cambio"):
+    """
+    Prompt para análisis de mercados financieros (Forex, Tasas).
+    Enfocado en movimientos de corto plazo y niveles técnicos.
+    """
+    return f"""
+    Actúa como un Analista de Mercados Financieros especializado en Perú.
+    
+    Tu objetivo es analizar: {topic}
+    
+    ESTILO:
+    - Directo, enfocado en traders e inversionistas.
+    - Usa jerga de mercado ("upside", "soporte", "volatilidad").
+    - Analiza el dato más reciente disponible.
+    
+    ESTRUCTURA:
+    1. **Flash de Mercado**: Último precio/valor.
+    2. **Tendencia Corto Plazo**: ¿Alcista, bajista o lateral?
+    3. **Rangos Clave**: Soportes y resistencias (si aplica) o niveles históricos.
+    4. **Drivers**: ¿Qué está moviendo al mercado? (Externo vs Local).
+    """
+
+@mcp.prompt()
+def explorador_datos(topic: str = "pbi"):
+    """
+    Prompt para ayudar a descubrir códigos de series del BCRP.
+    Actúa como un bibliotecario de la base de datos BCRP.
+    """
+    return f"""
+    Actúa como un Experto en Metadatos del BCRP.
+    
+    Tu única misión es ayudar al usuario a encontrar los CÓDIGOS DE SERIE correctos para: {topic}
+    
+    INSTRUCCIONES:
+    1. Usa la herramienta `search_series` para buscar variantes.
+    2. No devuelvas datos, solo devuélve una TABLA con:
+       - Código
+       - Nombre de la serie
+       - Frecuencia (Mensual/Diaria)
+    3. Sugiere cuál es la "serie principal" que deberían usar.
+    """
+
+# --- MCP Resources ---
+
+@mcp.resource("bcrp://metadata")
+def get_metadata() -> str:
+    """Retorna resumen de metadatos en caché incluyendo conteo total."""
+    try:
+        # Check if loaded, if not return suggestive message (async load diff in sync resource)
+        # For simplicity, we assume metadata is loaded or return basic info
+        if metadata_client.data is None:
+             return json.dumps({"status": "Metadata not loaded. Run a search first to initialize."})
+             
+        info = {
+            "total_series": len(metadata_client.data),
+            "columns": list(metadata_client.data.columns),
+            "memory_usage_mb": round(metadata_client.data.memory_usage(deep=True).sum() / 1e6, 2)
+        }
+        return json.dumps(info, indent=2)
+    except Exception as e:
+        return f"Error accessing metadata: {str(e)}"
+
+@mcp.resource("bcrp://indicators/key")
+def get_key_indicators() -> str:
+    """Retorna lista de los principales indicadores económicos."""
+    indicators = [
+        {"code": "PD04722MM", "name": "Tasa de Referencia del BCRP", "frequency": "Monthly"},
+        {"code": "PD04638PD", "name": "Tipo de Cambio Interbancario Venta", "frequency": "Daily"},
+        {"code": "PN01270PM", "name": "IPC Lima Metropolitana (Var % Mensual)", "frequency": "Monthly"},
+        {"code": "PN01652XM", "name": "Precio del Cobre (c/lb)", "frequency": "Daily"},
+        {"code": "PN00015MM", "name": "Reservas Internacionales Netas (Millones US$)", "frequency": "Monthly"}
+    ]
+    return json.dumps(indicators, indent=2)
+
+@mcp.resource("bcrp://help")
+def get_help() -> str:
+    """Retorna guía de uso del servidor MCP BCRP."""
+    return """# Guía del Servidor BCRP MCP
+
+## Cómo usar
+1. **Buscar**: Usa `search_series(query="...")` para encontrar códigos.
+2. **Datos**: Usa `get_data(series_codes=["..."])` para obtener JSON.
+3. **Gráfico**: Usa `plot_chart(series_codes=["..."])` para ver tendencias.
+
+## Tips
+- Códigos clave: `PN01270PM` (Inflación), `PD04638PD` (Dólar).
+"""

@@ -1,10 +1,13 @@
 import logging
-from typing import List, Dict, Any
+from typing import List, Dict, Any, TYPE_CHECKING
 import asyncio
 import io
 import os
 from pathlib import Path
 import httpx
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 logger = logging.getLogger("mcp_bcrp")
 
@@ -89,6 +92,7 @@ class BCRPMetadata:
         For deterministic single-match resolution, use `solve()`.
         """
         if self.df.empty:
+            import pandas as pd
             return pd.DataFrame()
 
         try:
@@ -295,10 +299,12 @@ class AsyncBCRPClient:
         except httpx.HTTPStatusError as e:
             if e.response.status_code == 404:
                 logger.warning(f"Series not found: {codes}")
+                import pandas as pd
                 return pd.DataFrame()
             raise
             
         if "periods" not in data:
+            import pandas as pd
             return pd.DataFrame()
 
         records = []

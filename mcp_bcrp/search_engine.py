@@ -13,7 +13,7 @@ import pandas as pd
 import logging
 import unicodedata
 import re
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 try:
     from rapidfuzz import fuzz

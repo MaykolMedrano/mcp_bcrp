@@ -4,14 +4,11 @@
   
 **MCP Server and Python library for the Banco Central de Reserva del Perú (BCRP) Statistical API. Access over 5,000 macroeconomic indicators directly from your AI agent or Python environment.**
 
-[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/downloads/)
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/MaykolMedrano/mcp_bcrp)
-[![PyPI](https://img.shields.io/pypi/v/mcp-bcrp.svg)](https://pypi.org/project/mcp-bcrp/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-[![User Guide](https://img.shields.io/badge/Guide-User_Guide_(Spanish)-green?style=for-the-badge&logo=jupyter)](https://github.com/MaykolMedrano/mcp_bcrp/blob/main/examples/Guia_Usuario_BCRP.ipynb)
-[![Colab](https://img.shields.io/badge/Open_in_Colab-blue?style=for-the-badge&logo=googlecolab)](https://colab.research.google.com/github/MaykolMedrano/mcp_bcrp/blob/main/examples/Guia_Usuario_BCRP.ipynb)
-  
+[![PyPI](https://img.shields.io/pypi/v/mcp-bcrp.svg?style=flat-square&color=blue)](https://pypi.org/project/mcp-bcrp/)
+[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue?style=flat-square&logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![Tests passing](https://img.shields.io/github/actions/workflow/status/MaykolMedrano/mcp_bcrp/python-app.yml?branch=main&style=flat-square)](https://github.com/MaykolMedrano/mcp_bcrp/actions)
+[![Downloads](https://img.shields.io/pypi/dm/mcp-bcrp?style=flat-square&color=blue)](https://pypi.org/project/mcp-bcrp/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)  
 </div>
 
 ---

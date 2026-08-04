@@ -1,7 +1,19 @@
 import json
+import os
+from pathlib import Path
 
-# Gold Data from BCRP (Monthly)
-with open(r'C:\Users\User\.gemini\antigravity\brain\3ea0eb1e-c5a2-4e74-bf36-badef1a4ab7e\.system_generated\steps\58\output.txt', 'r') as f:
+# Gold data exported from BCRP (Monthly). Configure the input path instead of
+# relying on a machine-specific path from the original analysis environment.
+input_path = Path(os.environ.get(
+    "BCRP_GOLD_INPUT",
+    Path(__file__).with_name("gold_monthly.json"),
+))
+output_path = Path(os.environ.get(
+    "BCRP_ANALYSIS_OUTPUT",
+    Path(__file__).with_name("chart_data.json"),
+))
+
+with input_path.open(encoding="utf-8") as f:
     gold_monthly = json.load(f)
 
 # Deforestation Area from WB (Annual)
@@ -68,7 +80,7 @@ chart_data = [
     {"REF_AREA": "PER", "INDICATOR": "Perdida Forestal (Normalizada)", **{y: round(v, 2) for y, v in norm_loss.items()}}
 ]
 
-with open('chart_data.json', 'w') as f:
+with output_path.open('w', encoding="utf-8") as f:
     json.dump(chart_data, f)
 
-print("\nChart data saved to chart_data.json")
+print(f"\nChart data saved to {output_path}")

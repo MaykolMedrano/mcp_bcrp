@@ -370,15 +370,15 @@ def explorador_datos(topic: str = "pbi"):
 def get_metadata() -> str:
     """Retorna resumen de metadatos en caché incluyendo conteo total."""
     try:
-        # Check if loaded, if not return suggestive message (async load diff in sync resource)
-        # For simplicity, we assume metadata is loaded or return basic info
-        if metadata_client.data is None:
-             return json.dumps({"status": "Metadata not loaded. Run a search first to initialize."})
-             
+        # Resources are synchronous; a search or get operation loads metadata.
+        # BCRPMetadata stores it in ``df`` (not ``data``).
+        if not metadata_client._loaded or metadata_client.df.empty:
+            return json.dumps({"status": "Metadata not loaded. Run a search first to initialize."})
+
         info = {
-            "total_series": len(metadata_client.data),
-            "columns": list(metadata_client.data.columns),
-            "memory_usage_mb": round(metadata_client.data.memory_usage(deep=True).sum() / 1e6, 2)
+            "total_series": len(metadata_client.df),
+            "columns": list(metadata_client.df.columns),
+            "memory_usage_mb": round(metadata_client.df.memory_usage(deep=True).sum() / 1e6, 2)
         }
         return json.dumps(info, indent=2)
     except Exception as e:

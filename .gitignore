@@ -8,6 +8,7 @@ __pycache__/
 dist/
 build/
 *.egg
+mcp_bcrp/_version.py
 
 # Virtual environments
 venv/

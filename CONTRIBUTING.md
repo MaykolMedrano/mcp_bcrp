@@ -6,8 +6,8 @@ Thank you for your interest in contributing! This project follows a simple contr
 
 ```bash
 # Clone the repository
-git clone https://github.com/MaykolMedrano/mcp-bcrp.git
-cd mcp-bcrp
+git clone https://github.com/MaykolMedrano/mcp_bcrp.git
+cd mcp_bcrp
 
 # Create virtual environment
 python -m venv venv

@@ -6,7 +6,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/mcp-bcrp.svg?style=flat-square&color=blue)](https://pypi.org/project/mcp-bcrp/)
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue?style=flat-square&logo=python&logoColor=white)](https://www.python.org/downloads/)
-[![Tests passing](https://img.shields.io/github/actions/workflow/status/MaykolMedrano/mcp_bcrp/python-app.yml?branch=main&style=flat-square)](https://github.com/MaykolMedrano/mcp_bcrp/actions)
+[![Tests passing](https://img.shields.io/github/actions/workflow/status/MaykolMedrano/mcp_bcrp/ci.yml?branch=main&style=flat-square)](https://github.com/MaykolMedrano/mcp_bcrp/actions)
 [![Downloads](https://img.shields.io/pypi/dm/mcp-bcrp?style=flat-square&color=blue)](https://pypi.org/project/mcp-bcrp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)  
 </div>
@@ -64,13 +64,14 @@ The library implements:
 
 - Python 3.10 or higher
 - Internet connection for API requests
-- Dependencies: `httpx`, `pandas`, `fastmcp`, `rapidfuzz`, `matplotlib`
+- Runtime dependencies: `httpx`, `pandas`, `fastmcp`, and `rapidfuzz`
+- Optional chart dependency: `matplotlib` via the `charts` extra
 
 ---
 
 ## Installation
 
-### From PyPI (when published)
+### From PyPI
 
 ```bash
 pip install mcp-bcrp
@@ -79,8 +80,8 @@ pip install mcp-bcrp
 ### From Source
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/mcp-bcrp.git
-cd mcp-bcrp
+git clone https://github.com/MaykolMedrano/mcp_bcrp.git
+cd mcp_bcrp
 pip install -e .
 ```
 
@@ -118,7 +119,7 @@ Add the following to your MCP configuration file (e.g., `mcp_config.json`):
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `BCRP_CACHE_DIR` | Directory for metadata cache | User cache dir |
-| `BCRP_TIMEOUT` | HTTP request timeout in seconds | 120 |
+| `BCRP_TIMEOUT` | HTTP request timeout in seconds for metadata and data requests | 120 |
 
 ---
 
@@ -258,8 +259,12 @@ mcp_bcrp/
 └── search_engine.py     # Deterministic search pipeline implementation
 
 run.py                   # MCP server entry point
-bcrp_metadata.json       # Cached metadata (17MB, auto-downloaded)
 ```
+
+The metadata catalog is downloaded on first use and cached per user (on
+Windows, under `%LOCALAPPDATA%\mcp_bcrp`; on macOS/Linux, under the platform
+cache directory). Set `BCRP_CACHE_DIR` to choose another location. The cache
+is not part of the repository or the distribution package.
 
 ---
 
@@ -269,7 +274,9 @@ bcrp_metadata.json       # Cached metadata (17MB, auto-downloaded)
 > **API Rate Limits**: The BCRP API does not publish official rate limits. Implement appropriate delays between requests in production applications to avoid IP blocking.
 
 > [!WARNING]
-> **Data Freshness**: Metadata cache (`bcrp_metadata.json`) may become stale. Delete the file periodically to force a refresh of available indicators.
+> **Data Freshness**: The local metadata cache may become stale. Delete
+> `bcrp_metadata.json` from the configured cache directory, or call
+> `BCRPMetadata.refresh()`, to download the catalog again.
 
 > [!CAUTION]
 > **Unofficial Package**: This is an independent implementation and is not officially endorsed by the Banco Central de Reserva del Peru. Data accuracy depends on the upstream API.
@@ -311,7 +318,7 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for the f
 - [Banco Central de Reserva del Peru](https://www.bcrp.gob.pe/) for providing the public statistical API
 - [FastMCP](https://github.com/jlowin/fastmcp) for the Model Context Protocol framework
 - [RapidFuzz](https://github.com/maxbachmann/RapidFuzz) for fuzzy string matching
-- [usebcrp](https://github.com/mauricioalvaradoo/usebcrp) for inspiration on BCRP API integration
+- [usebcrp](https://github.com/MaykolMedrano/usebcrp) for inspiration on BCRP API integration
 
 ---
 

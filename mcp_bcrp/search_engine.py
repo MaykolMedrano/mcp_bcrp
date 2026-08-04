@@ -34,7 +34,9 @@ class SearchEngine:
     4. Multi-candidate Result Generation
     """
     
-    STOPWORDS = {'de', 'del', 'el', 'la', 'los', 'las', 'y', 'en', 'al', 'con', 'por', 'precio', 'valor', 'indicador'}
+    # Keep economic nouns such as "precio" and "valor": they distinguish
+    # indicators (for example, copper price versus copper production).
+    STOPWORDS = {'de', 'del', 'el', 'la', 'los', 'las', 'y', 'en', 'al', 'con', 'por', 'indicador'}
     
     # Synonym map for common abbreviations
     SYNONYMS = {

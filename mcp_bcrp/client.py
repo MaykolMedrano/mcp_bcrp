@@ -11,6 +11,23 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger("mcp_bcrp")
 
+
+def _timeout_from_env(default: float = 120.0) -> float:
+    """Return a positive HTTP timeout from ``BCRP_TIMEOUT`` if configured."""
+    raw = os.environ.get("BCRP_TIMEOUT")
+    if raw is None or not raw.strip():
+        return default
+    try:
+        value = float(raw)
+    except ValueError:
+        logger.warning("Invalid BCRP_TIMEOUT=%r; using %.1f seconds", raw, default)
+        return default
+    if value <= 0:
+        logger.warning("BCRP_TIMEOUT must be positive; using %.1f seconds", default)
+        return default
+    return value
+
+
 class BCRPMetadata:
     METADATA_URL = "https://estadisticas.bcrp.gob.pe/estadisticas/series/metadata"
     CACHE_FILENAME = "bcrp_metadata.json"
@@ -72,7 +89,11 @@ class BCRPMetadata:
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
         }
-        async with httpx.AsyncClient(headers=headers, follow_redirects=True, timeout=120.0) as client:
+        async with httpx.AsyncClient(
+            headers=headers,
+            follow_redirects=True,
+            timeout=_timeout_from_env(),
+        ) as client:
             resp = await client.get(self.METADATA_URL)
             resp.raise_for_status()
             
@@ -178,8 +199,8 @@ class AsyncBCRPClient:
     """
     BASE_URL = "https://estadisticas.bcrp.gob.pe/estadisticas/series/api"
 
-    def __init__(self, timeout: float = 30.0):
-        self.timeout = timeout
+    def __init__(self, timeout: float | None = None):
+        self.timeout = _timeout_from_env() if timeout is None else timeout
         self.headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
             "Accept": "application/json, text/plain, */*"
